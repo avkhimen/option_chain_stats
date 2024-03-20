@@ -2,6 +2,7 @@ import numpy as np
 from dotenv import load_dotenv
 import os
 import requests
+import pandas as pd
 
 load_dotenv()  # take environment variables from .env.
 
@@ -32,3 +33,7 @@ if response. status_code in (200, 203):
     print(data)
 else:
     print(f'Failed to retrieve data: {response.status_code}')
+
+response = pd.read_json('company_tickers.json')
+
+print(response)
