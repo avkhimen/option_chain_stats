@@ -4,6 +4,7 @@ import os
 import requests
 import pandas as pd
 import time
+import datetime
 
 load_dotenv()  # take environment variables from .env.
 
@@ -56,6 +57,7 @@ for ticker in tickers[:1]:
         # Parsing the JSON response
         data = response.json()
         print(data.keys())
+        print(data['expiration'])
         strikes = data['strike']
     else:
         print(f'Failed to retrieve data: {response.status_code}')
@@ -66,5 +68,6 @@ for ticker in tickers[:1]:
         
         index = next((i for i, strike in enumerate(strikes) if float(strike) > ask), -1)
         last_strike = strikes[index]
+        expiration = datetime.datetime.fromtimestamp(int(strikes[0])).strftime('%Y-%m-%d %H:%M:%S')
 
     time.sleep(0.1)
