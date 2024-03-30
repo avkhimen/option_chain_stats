@@ -19,7 +19,7 @@ for k, v in response.items():
 
 token = os.getenv('marketdata_token')
 
-for ticker in tickers:
+for ii, ticker in enumerate(tickers[2045:]):
 
     # The API endpoint for retrieving stock quotes for SPY
     url = 'https://api.marketdata.app/v1/stocks/quotes/' + ticker + '/'
@@ -34,7 +34,7 @@ for ticker in tickers:
     response = requests.get(url, headers=headers)
 
     # Checking if the request was successful
-    if response. status_code in (200, 203):
+    if response.status_code in (200, 203):
         # Parsing the JSON response
         data = response.json()
         ask = float(data['ask'][0])
@@ -55,7 +55,7 @@ for ticker in tickers:
     response = requests.get(url, headers=headers)
 
         # Checking if the request was successful
-    if response. status_code in (200, 203):
+    if response.status_code in (200, 203):
         # Parsing the JSON response
         data = response.json()
         #print(data.keys())
@@ -69,23 +69,26 @@ for ticker in tickers:
     #print(ask, strikes)
     if ask != -1 and strikes != -1:
         
-        index = next((i for i, strike in enumerate(strikes) if float(strike) > ask), -1)
-        last_strike = str(float(strikes[index]))
-        expiration = str(datetime.datetime.fromtimestamp(int(data['expiration'][index])).strftime('%Y-%m-%d %H:%M:%S'))
-        call_bid = str(float(data['bid'][index]))
-        call_ask = str(float(data['ask'][index]))
-        iv = str(float(data['iv'][index]))
+        try:
+            index = next((i for i, strike in enumerate(strikes) if float(strike) > ask), -1)
+            last_strike = str(float(strikes[index]))
+            expiration = datetime.datetime.fromtimestamp(int(data['expiration'][index])).strftime('%Y-%m-%d %H:%M:%S')
+            call_bid = str(float(data['bid'][index]))
+            call_ask = str(float(data['ask'][index]))
+            iv = str(float(data['iv'][index]))
 
-        # print(index)
-        # print(last_strike)
-        # print(expiration)
-        # print(call_ask)
-        # print(call_bid)
-        # print(data['strike'][index])
-        # print(iv)
-        print(ticker, '|', ask, '|', last_strike, '|', expiration, '|', call_ask, '|', call_bid, '|', iv)
-        s = ticker + '|' + ask + '|' + last_strike + '|' + expiration + '|' + call_ask + '|' + call_bid + '|' + iv
-        with open('data.txt', 'wb') as f:
-            f.write(s)
+            # print(index)
+            # print(last_strike)
+            # print(expiration)
+            # print(call_ask)
+            # print(call_bid)
+            # print(data['strike'][index])
+            # print(iv)
+            print(ticker, '|', ask, '|', last_strike, '|', expiration, '|', call_ask, '|', call_bid, '|', iv)
+            s = str(ii) + '|' + ticker + '|' + str(ask) + '|' + last_strike + '|' + expiration + '|' + call_ask + '|' + call_bid + '|' + iv
+            with open('data.txt', 'a') as f:
+                f.write(s + '\n')
+        except Exception as e:
+            print('For ', ticker, ' couldnt get info')
 
     time.sleep(1)
