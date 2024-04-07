@@ -5,6 +5,13 @@ import os
 
 load_dotenv()  # take environment variables from .env.
 
+response = pd.read_json('company_tickers.json')
+
+tickers = []
+
+for k, v in response.items():
+    tickers.append(v['ticker'])
+
 date_string1 = '2024-04-12'
 date_object1 = datetime.strptime(date_string1, '%Y-%m-%d')
 
