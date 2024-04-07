@@ -1,6 +1,7 @@
 import yfinance as yf
 from datetime import datetime
 from dotenv import load_dotenv
+import pandas as pd
 import os
 
 load_dotenv()  # take environment variables from .env.
@@ -25,6 +26,12 @@ aapl = yf.Ticker("SPY")
 print(aapl.info['fiftyTwoWeekHigh'])
 print(aapl.options)
 print(aapl.info.keys())
+
+try:
+    ticker_obj = yf.Ticker("FDFHFDGHFGH")
+    ticker_exists = True
+except Exception as e:
+    ticker_exists = False
 
 # Things to consider
 # difference between options
